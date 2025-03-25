@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+.env.bak/
+.venv/
+
+# PyCharm
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Ansible vault secrets (если ты используешь шифрование)
+*.vault
+*.vault.yml
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+*.seed
+docker-compose.override.yml
+
+
+*.pem
+*.pub
+*.key
+*.crt
+*.ssh
+
+# Cache
+.cache/
+pip-wheel-metadata/
+__pypackages__/
+
+# Python tooling
+.mypy_cache/
+.pytest_cache/
+.coverage
+.tox/

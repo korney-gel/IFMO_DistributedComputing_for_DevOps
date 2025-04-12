@@ -80,6 +80,14 @@
         owner: korney1978
         group: korney1978
 
+    - name: Create MySQL config directory
+      file:
+        path: /home/korney1978/.mysql
+        state: directory
+        owner: korney1978
+        group: korney1978
+        mode: '0700'
+
     - name: Copy MySQL config file
       copy:
         content: |

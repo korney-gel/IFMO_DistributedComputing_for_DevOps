@@ -110,6 +110,10 @@
         - "SHOW MASTER STATUS;"
       become_user: korney1978
 
+    - name: Create mydb on master AFTER replication configured
+      command: docker exec db-master mysql -uroot -proot -e "CREATE DATABASE mydb;"
+      become_user: korney1978
+
     - name: Get Master log file and position
       command: docker exec db-master mysql -uroot -proot -e "SHOW MASTER STATUS;"
       register: master_status

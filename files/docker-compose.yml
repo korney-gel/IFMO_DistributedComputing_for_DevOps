@@ -6,10 +6,10 @@ services:
     container_name: db-master
     restart: always
     environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: mydb
-        MYSQL_USER: user
-        MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     volumes:
       - db_master_data:/var/lib/mysql
     command: --log-bin=mysql-bin --server-id=1 --binlog-do-db=mydb
@@ -35,10 +35,10 @@ services:
       - "80:80"
     restart: always
     environment:
-        WORDPRESS_DB_HOST: db-master:3306
-        WORDPRESS_DB_USER: user
-        WORDPRESS_DB_PASSWORD: password
-        WORDPRESS_DB_NAME: mydb
+      WORDPRESS_DB_HOST: db-master:3306
+      WORDPRESS_DB_USER: user
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: mydb
     depends_on:
       - db-master
 

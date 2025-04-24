@@ -1,0 +1,4 @@
+wp_user: korney1978
+wp_group: korney1978
+wp_path: /opt/wordpress
+wp_db_name: mydb

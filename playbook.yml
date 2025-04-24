@@ -2,6 +2,9 @@
   hosts: praktikum
   become: yes
 
+  vars:
+    - vars.yml
+
   tasks:
     - name: Install prerequisite packages
       apt:
@@ -28,10 +31,12 @@
         state: absent
         purge: yes
 
-    - name: Add Docker GPG key
-      apt_key:
+    - name: Download Docker GPG key
+      get_url:
         url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+        dest: /usr/share/keyrings/docker-archive-keyring.gpg
+        mode: '0644'
+
 
     - name: Add Docker repository
       apt_repository:
@@ -57,16 +62,16 @@
 
     - name: Add user to docker group
       user:
-        name: korney1978
+        name: "{{ wp_user }}"
         groups: docker
         append: yes
 
     - name: Make directory for WordPress
       file:
-        path: /opt/wordpress
+        path: "{{ wp_path }}"
         state: directory
-        owner: korney1978
-        group: korney1978
+        owner: "{ {wp_user }}"
+        group: "{{ wp_group }}"
 
     - name: Remove old docker-compose.yml
       file:

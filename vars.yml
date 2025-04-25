@@ -7,3 +7,7 @@ mysql_wp_user: user
 mysql_wp_password: password
 mysql_repl_user: repl
 mysql_repl_password: replpass
+# Для мониторинга
+grafana_admin_password: "YourGrafanaAdminSecret"
+mysql_exporter_user:       "exporter"
+mysql_exporter_password:   "exporterpass"

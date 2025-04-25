@@ -1,0 +1,49 @@
+# monitoring.yml
+- name: Deploy Prometheus + Grafana monitoring stack
+  hosts: praktikum
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Ensure Docker network exists
+      docker_network:
+        name: monitoring_net
+        state: present
+
+    - name: Create /opt/monitoring directory
+      file:
+        path: /opt/monitoring
+        state: directory
+        owner: "{{ wp_user }}"
+        group: "{{ wp_group }}"
+        mode: '0755'
+
+    - name: Copy Prometheus config
+      copy:
+        src: files/prometheus.yml
+        dest: /opt/monitoring/prometheus.yml
+        owner: "{{ wp_user }}"
+        group: "{{ wp_group }}"
+        mode: '0644'
+
+    - name: Copy Docker-Compose for monitoring
+      copy:
+        src: files/docker-compose-monitoring.yml
+        dest: /opt/monitoring/docker-compose.yml
+        owner: "{{ wp_user }}"
+        group: "{{ wp_group }}"
+        mode: '0644'
+
+    - name: Pull monitoring images
+      command: docker compose pull
+      args:
+        chdir: /opt/monitoring
+      become_user: "{{ wp_user }}"
+
+    - name: Launch monitoring stack
+      command: docker compose up -d
+      args:
+        chdir: /opt/monitoring
+      become_user: "{{ wp_user }}"

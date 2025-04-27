@@ -12,6 +12,9 @@ services:
     volumes:
       - db_master_data:/var/lib/mysql
     command: --log-bin=mysql-bin --server-id=1
+    networks:
+      - default
+      - monitoring_net
 
   db-slave:
     image: mysql:5.7
@@ -26,6 +29,9 @@ services:
     command: --server-id=2 --log-slave-updates
     depends_on:
       - db-master
+    networks:
+      - default
+      - monitoring_net
 
   wordpress:
     image: wordpress:latest
@@ -42,8 +48,15 @@ services:
       - wordpress_data:/var/www/html
     depends_on:
       - db-master
+    networks:
+      - default
+      - monitoring_net
 
 volumes:
   db_master_data:
   db_slave_data:
   wordpress_data:
+
+networks:
+  monitoring_net:
+    external: true

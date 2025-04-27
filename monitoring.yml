@@ -7,6 +7,18 @@
     - vars.yml
 
   tasks:
+    - name: Create user exporter from mysqld_exporter
+      mysql_user:
+        login_host: 127.0.0.1
+        login_port: 3306
+        login_user: root
+        login_password: "root"
+        name: exporter
+        password: exporterpass
+        host: '%'
+        priv: '*.*:PROCESS,REPLICATION CLIENT'
+        state: present
+
     - name: Ensure Docker network exists
       docker_network:
         name: monitoring_net

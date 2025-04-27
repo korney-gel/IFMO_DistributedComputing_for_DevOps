@@ -33,16 +33,24 @@ services:
     image: prom/node-exporter:latest
     container_name: node_exporter
     restart: always
-    network_mode: host
-    pid: host
+    networks:
+      - monitoring_net
 
-  mysqld_exporter:
+  mysql_exporter:
     image: prom/mysqld-exporter:latest
-    container_name: mysqld_exporter
+    container_name: mysql_exporter
     restart: always
-    network_mode: host
-    environment:
-      DATA_SOURCE_NAME: "{{ mysql_exporter_user }}:{{ mysql_exporter_password }}@tcp(db-master:3306)/"
+    networks:
+      - monitoring_net
+    volumes:
+      - ./.my.cnf:/.my.cnf:ro
+      # А вот здесь даём понять экспортеру, где брать creds
+    command:
+      - "--config.my-cnf=/.my.cnf"
+      - "--web.listen-address=:9104"
+    ports:
+      - "9104:9104"
+
 
 volumes:
   prometheus_data:
@@ -51,3 +59,4 @@ volumes:
 networks:
   monitoring_net:
     external: true
+

@@ -1,26 +1,31 @@
-# monitoring.yml
 - name: Deploy Prometheus + Grafana monitoring stack
   hosts: praktikum
-  become: yes
+  become: true
+
+  collections:
+    - community.mysql
+    - community.docker
 
   vars_files:
     - vars.yml
 
   tasks:
-    - name: Create user exporter from mysqld_exporter
-      mysql_user:
+    - name: Create exporter user for mysqld_exporter
+      community.mysql.mysql_user:
         login_host: 127.0.0.1
         login_port: 3306
         login_user: root
-        login_password: "root"
-        name: exporter
-        password: exporterpass
+        login_password: "{{ mysql_root_password }}"
+        name: "{{ mysql_exporter_user }}"
+        password: "{{ mysql_exporter_password }}"
         host: '%'
         priv: '*.*:PROCESS,REPLICATION CLIENT'
         state: present
+      ignore_errors: true
+      register: exporter_user_creation
 
     - name: Ensure Docker network exists
-      docker_network:
+      community.docker.docker_network:
         name: monitoring_net
         state: present
 
@@ -49,13 +54,13 @@
         mode: '0644'
 
     - name: Pull monitoring images
-      command: docker compose pull
-      args:
-        chdir: /opt/monitoring
+      community.docker.docker_compose_v2:
+        project_src: /opt/monitoring
+        pull: always
       become_user: "{{ wp_user }}"
 
     - name: Launch monitoring stack
-      command: docker compose up -d
-      args:
-        chdir: /opt/monitoring
+      community.docker.docker_compose_v2:
+        project_src: /opt/monitoring
+        state: present
       become_user: "{{ wp_user }}"
